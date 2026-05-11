@@ -1,0 +1,21 @@
+{
+  "name": "Morte Violenta Intencional",
+  "short_name": "MVI",
+  "description": "Aplicativo para coleta de dados periciais em locais de morte violenta intencional",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc3545",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

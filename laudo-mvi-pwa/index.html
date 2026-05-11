@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morte Violenta Intencional</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1f2f46">
+
+  <script src="jspdf.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 10px;
+      background: #f8f9fa;
+    }
+
+    h2 {
+      background: #1f2f46;
+      color: white;
+      padding: 12px;
+      border-radius: 5px;
+    }
+
+    h3 {
+      color: #1f2f46;
+      margin-top: 30px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 80px;
+    }
+
+    .info-fixa {
+      background: #eef1f5;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      color: #1f2f46;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 15px;
+      width: 100%;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-pdf {
+      background: #1f2f46;
+    }
+
+    .btn-limpar {
+      background: #6c757d;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: gray;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Morte Violenta Intencional</h2>
+
+<form id="form">
+
+<h3>Informações Gerais</h3>
+
+<label>Data do acionamento</label>
+<input type="date" id="dataAcionamento">
+
+<label>REP</label>
+<input type="text" id="rep" placeholder="Número do REP">
+
+<label>GPS</label>
+<input type="text" id="gps" placeholder="Coordenadas GPS">
+
+<h3>Características do Local</h3>
+
+<label>Tipo de pavimento</label>
+<input type="text" id="pavimento" placeholder="Ex: asfalto, paralelepípedo">
+
+<label>Número de faixas</label>
+<input type="number" id="faixas" placeholder="Quantidade de faixas">
+
+<label>Tipo de iluminação</label>
+<input type="text" id="iluminacao" placeholder="Ex: pública, ausente">
+
+<label>Tipo de visibilidade durante a perícia</label>
+<input type="text" id="visibilidade" placeholder="Ex: boa, reduzida">
+
+<label>Tipo de acesso</label>
+<input type="text" id="acesso" placeholder="Ex: via pública, propriedade privada">
+
+<label>Tipo de imóvel predominante ao redor</label>
+<input type="text" id="imovelPredominante" placeholder="Ex: residencial, comercial">
+
+<h3>Informações sobre Câmeras</h3>
+
+<label>Tipo de câmeras</label>
+<input type="text" id="tipoCamera" placeholder="Ex: pública, particular">
+
+<label>Posição da câmera</label>
+<input type="text" id="posicaoCamera" placeholder="Localização">
+
+<label>Distância da câmera ao cadáver</label>
+<input type="text" id="distanciaCamera" placeholder="Em metros">
+
+<h3>Perito e Horários</h3>
+
+<div class="info-fixa">
+  Nome e matrícula do perito responsável<br>
+  Meirere Lucio Pereira (mat. 387.064-2)
+</div>
+
+<label>Hora da chegada ao local</label>
+<input type="time" id="horaChegada">
+
+<label>Hora do fim da perícia</label>
+<input type="time" id="horaFim">
+
+<label>Finalizada no mesmo dia?</label>
+<select id="mesmoDia">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+</select>
+
+<h3>Delegado Responsável</h3>
+
+<label>Nome do delegado responsável</label>
+<input type="text" id="nomeDelegado" placeholder="Nome completo">
+
+<label>Matrícula do delegado</label>
+<input type="text" id="matriculaDelegado" placeholder="Número da matrícula">
+
+<h3>Isolamento do Local</h3>
+
+<label>O local estava isolado?</label>
+<select id="localIsolado">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+  <option>Parcialmente</option>
+</select>
+
+<label>Tipo de polícia responsável pelo isolamento</label>
+<input type="text" id="policiaIsolamento" placeholder="Ex: PM, PC">
+
+<label>Nome e patente/cargo do responsável</label>
+<input type="text" id="responsavelIsolamento" placeholder="Nome e patente">
+
+<label>Matrícula do responsável</label>
+<input type="text" id="matriculaResponsavel" placeholder="Número da matrícula">
+
+<h3>Vestígios Encontrados</h3>
+
+<label>Vestígio 1</label>
+<textarea id="vestigio1" placeholder="Descrição do vestígio"></textarea>
+
+<label>Vestígio 2</label>
+<textarea id="vestigio2" placeholder="Descrição do vestígio"></textarea>
+
+<label>Vestígio 3</label>
+<textarea id="vestigio3" placeholder="Descrição do vestígio"></textarea>
+
+<label>Vestígio 4</label>
+<textarea id="vestigio4" placeholder="Descrição do vestígio"></textarea>
+
+<h3>Informações sobre a Vítima</h3>
+
+<label>Qual era o traje da vítima?</label>
+<textarea id="trajeVitima" placeholder="Descrição detalhada do traje"></textarea>
+
+<label>Os pés estavam calçados? Se sim, com o quê?</label>
+<input type="text" id="pesCalcados" placeholder="Ex: Sim, tênis preto">
+
+<label>Quais pertences foram encontrados com a vítima?</label>
+<textarea id="pertences" placeholder="Liste os pertences encontrados"></textarea>
+
+<label>O delegado responsável entregou os pertences aos familiares?</label>
+<select id="entregaPertences">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+  <option>Não informado</option>
+  <option>Não se aplica</option>
+</select>
+
+<h3>Dados Adicionais da Perícia</h3>
+
+<label>Protocolo CAD/CIODS</label>
+<input type="text" id="protocolo" placeholder="Número do protocolo">
+
+<label>Circunscrição</label>
+<input type="text" id="circunscricao" placeholder="Circunscrição">
+
+<label>Data da perícia</label>
+<input type="date" id="dataPericia">
+
+<label>Local principal</label>
+<input type="text" id="localPrincipal" placeholder="Ex: via pública, bar, residência">
+
+<label>Rua</label>
+<input type="text" id="rua" placeholder="Nome da rua">
+
+<label>Número</label>
+<input type="text" id="numero" placeholder="Número ou S/N">
+
+<label>Bairro</label>
+<input type="text" id="bairro" placeholder="Nome do bairro">
+
+<label>Cidade</label>
+<input type="text" id="cidade" placeholder="Nome da cidade">
+
+<label>Estado</label>
+<input type="text" id="estado" placeholder="UF">
+
+<label>Nome da vítima</label>
+<input type="text" id="nomeVitima" placeholder="Nome completo">
+
+<label>Sexo</label>
+<select id="sexo">
+  <option value="">Selecione</option>
+  <option>Masculino</option>
+  <option>Feminino</option>
+  <option>Não identificado</option>
+</select>
+
+<label>Data de nascimento</label>
+<input type="date" id="dataNascimento">
+
+<label>Idade aparente</label>
+<input type="text" id="idadeAparente" placeholder="Idade estimada">
+
+<label>Cor</label>
+<input type="text" id="cor" placeholder="Ex: negra, parda, branca, amarela, indígena">
+
+<label>Decúbito</label>
+<input type="text" id="decubito" placeholder="Ex: dorsal, ventral, lateral direito, lateral esquerdo">
+
+<label>Tipo de solo do cadáver</label>
+<input type="text" id="soloCadaver" placeholder="Descrição do tipo de solo">
+
+<button type="button" class="btn-pdf" onclick="gerarPDF()">
+Gerar PDF
+</button>
+
+<button type="button" class="btn-limpar" onclick="limparDados()">
+Limpar dados
+</button>
+
+</form>
+
+<footer>
+  © Perito Meirere
+</footer>
+
+<script>
+const campos = document.querySelectorAll("input, select, textarea");
+
+campos.forEach(campo => {
+  const valorSalvo = localStorage.getItem(campo.id);
+
+  if (valorSalvo !== null) {
+    campo.value = valorSalvo;
+  }
+
+  campo.addEventListener("input", () => {
+    localStorage.setItem(campo.id, campo.value);
+  });
+});
+
+function gerarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let texto = "MORTE VIOLENTA INTENCIONAL\n\n";
+  texto += "Perito responsável: Meirere Lucio Pereira (mat. 387.064-2)\n\n";
+
+  document.querySelectorAll("input, select, textarea").forEach(el => {
+    if (el.value) {
+      const label = el.previousElementSibling ? el.previousElementSibling.innerText : el.id;
+      texto += label + ": " + el.value + "\n\n";
+    }
+  });
+
+  const linhas = doc.splitTextToSize(texto, 180);
+  let y = 10;
+
+  linhas.forEach(linha => {
+    if (y > 280) {
+      doc.addPage();
+      y = 10;
+    }
+
+    doc.text(linha, 10, y);
+    y += 7;
+  });
+
+  const data = document.getElementById("dataPericia").value || document.getElementById("dataAcionamento").value || "sem_data";
+  doc.save(`morte_violenta_intencional_${data}.pdf`);
+}
+
+function limparDados() {
+  const confirmar = confirm("Tem certeza que deseja apagar todos os dados preenchidos?");
+
+  if (confirmar) {
+    localStorage.clear();
+    alert("Dados apagados com sucesso.");
+    location.reload();
+  }
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
+
+</body>
+</html>
