@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mvi-cache-v2';
+const CACHE_NAME = 'mvi-cache-v3';
 
 const urlsToCache = [
   './',
