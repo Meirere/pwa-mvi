@@ -306,8 +306,11 @@ function gerarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
+  const nomePerito = document.getElementById("perito").value || "Meirere Lucio Pereira";
+  const matPerito = document.getElementById("matriculaPerito").value || "387.064-2";
+
   let texto = "MORTE VIOLENTA INTENCIONAL\n\n";
-  texto += "Perito responsável: Meirere Lucio Pereira (mat. 387.064-2)\n\n";
+  texto += `Perito responsável: ${nomePerito} (mat. ${matPerito})\n\n`;
 
   document.querySelectorAll("input, select, textarea").forEach(el => {
     if (el.value) {
