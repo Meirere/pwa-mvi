@@ -93,18 +93,40 @@
 <h2>Morte Violenta Intencional</h2>
 
 <form id="form">
+<h3>Dados Adicionais da Perícia</h3>
+
+<label>Protocolo CAD/CIODS</label>
+<input type="text" id="protocolo" placeholder="Número do protocolo">
+
+<label>Circunscrição</label>
+<input type="text" id="circunscricao" placeholder="Circunscrição">
+
+<label>Data da perícia</label>
+<input type="date" id="dataPericia">
+
+<label>Local principal</label>
+<input type="text" id="localPrincipal" placeholder="Ex: via pública, bar, residência">
+
+<label>Rua</label>
+<input type="text" id="rua" placeholder="Nome da rua">
+
+<label>Número</label>
+<input type="text" id="numero" placeholder="Número ou S/N">
+
+<label>Bairro</label>
+<input type="text" id="bairro" placeholder="Nome do bairro">
+
+<label>Cidade</label>
+<input type="text" id="cidade" placeholder="Nome da cidade">
+
+<label>Estado</label>
+<input type="text" id="estado" placeholder="UF">
 
 <h3>Informações Gerais</h3>
 
 <label>Data do acionamento</label>
 <input type="date" id="dataAcionamento">
   
-<label>Data da perícia</label>
-<input type="date" id="dataPericia">
-
-<label>REP</label>
-<input type="text" id="rep" placeholder="Número do REP">
-
 <label>GPS</label>
 <input type="text" id="gps" placeholder="Coordenadas GPS">
 
@@ -146,7 +168,7 @@
 <label>Matrícula do Perito</label>
 <input type="text" id="matriculaPerito">
 
-  
+
 <label>Hora da chegada ao local</label>
 <input type="time" id="horaChegada">
 
@@ -175,8 +197,7 @@
   <option value="">Selecione</option>
   <option>Sim</option>
   <option>Não</option>
-  <option>Parcialmente</option>
-</select>
+ </select>
 
 <label>Tipo de polícia responsável pelo isolamento</label>
 <input type="text" id="policiaIsolamento" placeholder="Ex: PM, PC">
@@ -186,6 +207,14 @@
 
 <label>Matrícula do responsável</label>
 <input type="text" id="matriculaResponsavel" placeholder="Número da matrícula">
+
+<label>O local estava preservado?</label>
+<select id="localPreservado">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+  <option>Parcialmente</option>
+ </select>
 
 <h3>Vestígios Encontrados</h3>
 
@@ -221,34 +250,6 @@
   <option>Não se aplica</option>
 </select>
 
-<h3>Dados Adicionais da Perícia</h3>
-
-<label>Protocolo CAD/CIODS</label>
-<input type="text" id="protocolo" placeholder="Número do protocolo">
-
-<label>Circunscrição</label>
-<input type="text" id="circunscricao" placeholder="Circunscrição">
-
-<label>Data da perícia</label>
-<input type="date" id="dataPericia">
-
-<label>Local principal</label>
-<input type="text" id="localPrincipal" placeholder="Ex: via pública, bar, residência">
-
-<label>Rua</label>
-<input type="text" id="rua" placeholder="Nome da rua">
-
-<label>Número</label>
-<input type="text" id="numero" placeholder="Número ou S/N">
-
-<label>Bairro</label>
-<input type="text" id="bairro" placeholder="Nome do bairro">
-
-<label>Cidade</label>
-<input type="text" id="cidade" placeholder="Nome da cidade">
-
-<label>Estado</label>
-<input type="text" id="estado" placeholder="UF">
 
 <label>Nome da vítima</label>
 <input type="text" id="nomeVitima" placeholder="Nome completo">
@@ -276,6 +277,9 @@
 <label>Tipo de solo do cadáver</label>
 <input type="text" id="soloCadaver" placeholder="Descrição do tipo de solo">
 
+<label>Descrição das lesões aparentes</label>
+<textarea id="lesoes" placeholder="Descrever lesões visíveis, localização anatômica e características gerais"></textarea>
+  
 <button type="button" class="btn-pdf" onclick="gerarPDF()">
 Gerar PDF
 </button>
