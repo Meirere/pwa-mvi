@@ -79,6 +79,9 @@
       background: #6c757d;
     }
 
+    .btn-gps {
+      background: #198754;
+    }
     footer {
       text-align: center;
       margin-top: 30px;
@@ -129,6 +132,10 @@
   
 <label>GPS</label>
 <input type="text" id="gps" placeholder="Coordenadas GPS">
+
+<button type="button" class="btn-gps" onclick="capturarGPS()">
+  Capturar GPS
+</button>
 
 <h3>Características do Local</h3>
 
@@ -279,6 +286,9 @@
 
 <label>Descrição das lesões aparentes</label>
 <textarea id="lesoes" placeholder="Descrever lesões visíveis, localização anatômica e características gerais"></textarea>
+
+<label>Observações</label>
+<textarea id="observacoes" placeholder="Campo livre para digitar observações específicas deste caso"></textarea>
   
 <button type="button" class="btn-pdf" onclick="gerarPDF()">
 Gerar PDF
@@ -353,6 +363,45 @@ function limparDados() {
   }
 }
 
+function capturarGPS() {
+
+  if (!navigator.geolocation) {
+    alert("Geolocalização não suportada.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+
+    position => {
+
+      const latitude = position.coords.latitude.toFixed(6);
+      const longitude = position.coords.longitude.toFixed(6);
+      const precisao = position.coords.accuracy.toFixed(1);
+
+      const gps =
+        `${latitude}, ${longitude} | precisão aprox.: ${precisao} m`;
+
+      document.getElementById("gps").value = gps;
+
+      localStorage.setItem("gps", gps);
+    },
+
+    error => {
+
+      alert(
+        "Não foi possível capturar o GPS automaticamente.\n\n" +
+        "Você pode preencher manualmente."
+      );
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+  
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
