@@ -59,6 +59,12 @@
       color: #1f2f46;
       font-weight: bold;
     }
+    .titulo-vitima {
+      background: #072d64;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+    }
 
     button {
       margin-top: 20px;
@@ -72,7 +78,7 @@
     }
 
     .btn-pdf {
-      background: #1f2f46;
+      background: #e60505;
     }
 
     .btn-limpar {
@@ -81,6 +87,9 @@
 
     .btn-gps {
       background: #198754;
+    }
+    .btn-vitimas{
+      background: #092e61;
     }
     footer {
       text-align: center;
@@ -93,6 +102,32 @@
 
 <body>
 
+<h3>Isolamento do Local</h3>
+
+<label>O local estava isolado?</label>
+<select id="localIsolado">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+ </select>
+
+<label>Tipo de polícia responsável pelo isolamento</label>
+<input type="text" id="policiaIsolamento" placeholder="Ex: PM, PC">
+
+<label>Nome e patente/cargo do responsável</label>
+<input type="text" id="responsavelIsolamento" placeholder="Nome e patente">
+
+<label>Matrícula do responsável</label>
+<input type="text" id="matriculaResponsavel" placeholder="Número da matrícula">
+
+<label>O local estava preservado?</label>
+<select id="localPreservado">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+  <option>Parcialmente</option>
+ </select>
+  
 <h2>Morte Violenta Intencional</h2>
 
 <form id="form">
@@ -102,7 +137,32 @@
 <input type="text" id="protocolo" placeholder="Número do protocolo">
 
 <label>Circunscrição</label>
-<input type="text" id="circunscricao" placeholder="Circunscrição">
+<select id="circunscricao">
+  <option value="">Selecione</option>
+  <option value="91 CP - Bezerros">91 CP - Bezerros</option>
+  <option value="92 CP - Bonito">92 CP - Bonito</option>
+  <option value="94 CP - Cupira">94 CP - Cupira</option>
+  <option value="95 CP - Altinho">95 CP - Altinho</option>
+  <option value="96 CP - Agrestina">96 CP - Agrestina</option>
+  <option value="97 CP - São Joaquim do Monte">97 CP - São Joaquim do Monte</option>
+  <option value="98 CP - Riacho das Almas">98 CP - Riacho das Almas</option>
+  <option value="99 CP - Lagoa dos Gatos">99 CP - Lagoa dos Gatos</option>
+  <option value="100 CP - Camocim de São Félix">100 CP - Camocim de São Félix</option>
+  <option value="102 CP - Barra de Guabiraba">102 CP - Barra de Guabiraba</option>
+  <option value="104 CP - Belo Jardim">104 CP - Belo Jardim</option>
+  <option value="106 CP - São Bento do Una">106 CP - São Bento do Una</option>
+  <option value="107 CP - Brejo da Madre de Deus">107 CP - Brejo da Madre de Deus</option>
+  <option value="108 CP - São Caetano">108 CP - São Caetano</option>
+  <option value="109 CP - Cachoeirinha">109 CP - Cachoeirinha</option>
+  <option value="110 CP - Sanharó">110 CP - Sanharó</option>
+  <option value="111 CP - Jataúba">111 CP - Jataúba</option>
+  <option value="112 CP - Tacaimbó">112 CP - Tacaimbó</option>
+  <option value="128 CP - Santa Cruz do Capibaribe">128 CP - Santa Cruz do Capibaribe</option>
+  <option value="129 CP - Toritama">129 CP - Toritama</option>
+  <option value="130 CP - Taquaritinga do Norte">130 CP - Taquaritinga do Norte</option>
+  <option value="131 CP - Vertentes">131 CP - Vertentes</option>
+  <option value="3 DHA - Caruaru">3 DHA - Caruaru</option>
+</select>
 
 <label>Data da perícia</label>
 <input type="date" id="dataPericia">
@@ -157,6 +217,12 @@
 <label>Tipo de imóvel predominante ao redor</label>
 <input type="text" id="imovelPredominante" placeholder="Ex: residencial, comercial">
 
+<label>Ambiente imediato</label>
+<textarea
+  id="ambienteImediato"
+  rows="3"
+  placeholder="Local interno ou externo, número de cômodos, entre outras informações">
+</textarea>
 <h3>Informações sobre Câmeras</h3>
 
 <label>Tipo de câmeras</label>
@@ -174,7 +240,6 @@
 <input type="text" id="perito">
 <label>Matrícula do Perito</label>
 <input type="text" id="matriculaPerito">
-
 
 <label>Hora da chegada ao local</label>
 <input type="time" id="horaChegada">
@@ -197,32 +262,6 @@
 <label>Matrícula do delegado</label>
 <input type="text" id="matriculaDelegado" placeholder="Número da matrícula">
 
-<h3>Isolamento do Local</h3>
-
-<label>O local estava isolado?</label>
-<select id="localIsolado">
-  <option value="">Selecione</option>
-  <option>Sim</option>
-  <option>Não</option>
- </select>
-
-<label>Tipo de polícia responsável pelo isolamento</label>
-<input type="text" id="policiaIsolamento" placeholder="Ex: PM, PC">
-
-<label>Nome e patente/cargo do responsável</label>
-<input type="text" id="responsavelIsolamento" placeholder="Nome e patente">
-
-<label>Matrícula do responsável</label>
-<input type="text" id="matriculaResponsavel" placeholder="Número da matrícula">
-
-<label>O local estava preservado?</label>
-<select id="localPreservado">
-  <option value="">Selecione</option>
-  <option>Sim</option>
-  <option>Não</option>
-  <option>Parcialmente</option>
- </select>
-
 <h3>Vestígios Encontrados</h3>
 
 <label>Vestígio 1</label>
@@ -237,18 +276,16 @@
 <label>Vestígio 4</label>
 <textarea id="vestigio4" placeholder="Descrição do vestígio"></textarea>
 
-<h3>Informações sobre a Vítima</h3>
+<h4 class="titulo-vitima">Vítimas do homicídio</h4>
 
-<label>Qual era o traje da vítima?</label>
-<textarea id="trajeVitima" placeholder="Descrição detalhada do traje"></textarea>
+    <label>Quantidade de vítimas</label>
+    <input type="number" id="qtdEnvolvidos" min="1" placeholder="Digite o número de vítimas">
 
-<label>Os pés estavam calçados? Se sim, com o quê?</label>
-<input type="text" id="pesCalcados" placeholder="Ex: Sim, tênis preto">
+    <button type="button" class="btn-vitimas" onclick="gerarEnvolvidos()">+ Gerar vitimas</button>
 
-<label>Quais pertences foram encontrados com a vítima?</label>
-<textarea id="pertences" placeholder="Liste os pertences encontrados"></textarea>
+    <div id="areaEnvolvidos"></div>
 
-<label>O delegado responsável entregou os pertences aos familiares?</label>
+<label>O delegado ficou responsável por entregar os pertences aos familiares?</label>
 <select id="entregaPertences">
   <option value="">Selecione</option>
   <option>Sim</option>
@@ -256,36 +293,6 @@
   <option>Não informado</option>
   <option>Não se aplica</option>
 </select>
-
-
-<label>Nome da vítima</label>
-<input type="text" id="nomeVitima" placeholder="Nome completo">
-
-<label>Sexo</label>
-<select id="sexo">
-  <option value="">Selecione</option>
-  <option>Masculino</option>
-  <option>Feminino</option>
-  <option>Não identificado</option>
-</select>
-
-<label>Data de nascimento</label>
-<input type="date" id="dataNascimento">
-
-<label>Idade aparente</label>
-<input type="text" id="idadeAparente" placeholder="Idade estimada">
-
-<label>Cor</label>
-<input type="text" id="cor" placeholder="Ex: negra, parda, branca, amarela, indígena">
-
-<label>Decúbito</label>
-<input type="text" id="decubito" placeholder="Ex: dorsal, ventral, lateral direito, lateral esquerdo">
-
-<label>Tipo de solo do cadáver</label>
-<input type="text" id="soloCadaver" placeholder="Descrição do tipo de solo">
-
-<label>Descrição das lesões aparentes</label>
-<textarea id="lesoes" placeholder="Descrever lesões visíveis, localização anatômica e características gerais"></textarea>
 
 <label>Observações</label>
 <textarea id="observacoes" placeholder="Campo livre para digitar observações específicas deste caso"></textarea>
@@ -318,6 +325,25 @@ campos.forEach(campo => {
     localStorage.setItem(campo.id, campo.value);
   });
 });
+
+function ativarSalvamento(seletor) {
+  document.querySelectorAll(`${seletor} input, ${seletor} select, ${seletor} textarea`)
+    .forEach(campo => {
+      const valorSalvo = localStorage.getItem(campo.id);
+
+      if (valorSalvo !== null) {
+        campo.value = valorSalvo;
+      }
+
+      campo.addEventListener("input", () => {
+        localStorage.setItem(campo.id, campo.value);
+      });
+
+      campo.addEventListener("change", () => {
+        localStorage.setItem(campo.id, campo.value);
+      });
+    });
+}
 
 function gerarPDF() {
   const { jsPDF } = window.jspdf;
@@ -362,6 +388,57 @@ function limparDados() {
     location.reload();
   }
 }
+function gerarEnvolvidos() {
+  const qtd = Number(document.getElementById("qtdEnvolvidos").value);
+  const area = document.getElementById("areaEnvolvidos");
+
+  area.innerHTML = "";
+
+  for (let i = 1; i <= qtd; i++) {
+    area.innerHTML += `
+      <div>
+        <h3 class="titulo-vitima">Vítima ${i}</h3>
+
+        <label>Nome da vítima ${i}</label>
+        <input type="text" id="nome${i}">
+        <label>Mãe da vítima ${i}</label>
+        <input type="text" id="mae${i}">
+        <label>Pai da vítima ${i}</label>
+        <input type="text" id="pai${i}">
+        <label>RG da vítima ${i}</label>
+        <input type="text" id="RG${i}">
+        <label>CPF da vítima ${i}</label>
+        <input type="text" id="CPF${i}">
+        <label>Data de nascimento vítima ${i}</label>
+        <input type="date" id="dataNascimento${i}">
+        <label>NIC da vítima ${i}</label>
+        <input type="text" id="nic${i}">
+        <label>idade aparente da vítima ${i}</label>
+        <input type="text" id="idade${i}">
+        <label>Vestes da vítima ${i}</label>
+        <input type="text" id="veste${i}">
+        <label>Sexo da vítima ${i}</label>
+        <select id="sexo${i}">
+          <option>Masculino</option>
+          <option>Feminino</option>
+          <option>Ignorado</option>
+        </select>
+        <label>Cutis da vítima ${i}</label>
+        <input type="text" id="cutis${i}" placeholder="Ex: negra, parda, branca, amarela, indígena">
+        <label>Decúbito da vítima ${i}</label>
+        <input type="text" id="decubito${i}" placeholder="Ex: dorsal, ventral, lateral direito, lateral esquerdo">
+        <label>Tipo de solo da vítima ${i}</label>
+        <input type="text" id="tipoSolo${i}" placeholder="Descrição do tipo de solo">
+        <label>Lesões da vítima ${i}</label>
+        <input type="text" id="Lesoes${i}" placeholder="Descrever lesões visíveis, localização anatômica e características gerais">
+        <label>Pertences da vítima ${i}</label>
+        <input type="text" id="pertence${i}">
+
+      </div>
+    `;
+  }
+  ativarSalvamento("#areaEnvolvidos");
+}
 
 function capturarGPS() {
 
@@ -398,10 +475,15 @@ function capturarGPS() {
       enableHighAccuracy: true,
       timeout: 15000,
       maximumAge: 0
-    }
+    } 
   );
 }
-  
+window.addEventListener("load", () => {
+  if (localStorage.getItem("qtdEnvolvidos")) {
+    gerarEnvolvidos();
+  }
+});
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
