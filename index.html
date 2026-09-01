@@ -16,7 +16,42 @@
       margin: 10px;
       background: #f8f9fa;
     }
+.foto-bic-container{
+  margin-top:20px;
+}
 
+.foto-bic-preview{
+  display:none;
+  width:100%;
+  max-height:400px;
+  object-fit:contain;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  background:white;
+}
+
+.acoes-foto-bic{
+  display:none;
+  gap:10px;
+  margin-top:10px;
+}
+
+.acoes-foto-bic button{
+  flex:1;
+}
+
+.btn-refazer-foto{
+  background:#6c757d;
+}
+
+.btn-excluir-foto{
+  background:#dc3545;
+}
+
+.btn-foto-bic{
+  background:#0d6efd;
+}
     h2 {
       background: #1f2f46;
       color: white;
@@ -310,7 +345,9 @@ Limpar dados
 </footer>
 
 <script>
-const campos = document.querySelectorAll("input, select, textarea");
+const campos = document.querySelectorAll(
+  'input:not([type="file"]), select, textarea'
+);
 
 campos.forEach(campo => {
   const valorSalvo = localStorage.getItem(campo.id);
@@ -325,7 +362,9 @@ campos.forEach(campo => {
 });
 
 function ativarSalvamento(seletor) {
-  document.querySelectorAll(`${seletor} input, ${seletor} select, ${seletor} textarea`)
+  document.querySelectorAll(
+  `${seletor} input:not([type="file"]), ${seletor} select, ${seletor} textarea`
+)
     .forEach(campo => {
       const valorSalvo = localStorage.getItem(campo.id);
 
@@ -342,7 +381,162 @@ function ativarSalvamento(seletor) {
       });
     });
 }
+/* =========================
+FOTOS BIC DAS VÍTIMAS
+========================= */
 
+const fotosBIC = {};
+
+function abrirCameraBIC(numero){
+
+  const input =
+    document.getElementById(`fotoBICInput${numero}`);
+
+  input.value = "";
+  input.click();
+}
+
+
+function processarFotoBIC(numero, input){
+
+  const arquivo = input.files[0];
+
+  if(!arquivo){
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(event){
+
+    const imagem = new Image();
+
+    imagem.onload = function(){
+
+      const canvas =
+        document.createElement("canvas");
+
+      const tamanhoMaximo = 1600;
+
+      let largura = imagem.width;
+      let altura = imagem.height;
+
+      if(
+        largura > altura &&
+        largura > tamanhoMaximo
+      ){
+
+        altura =
+          altura * tamanhoMaximo / largura;
+
+        largura = tamanhoMaximo;
+
+      }else if(altura > tamanhoMaximo){
+
+        largura =
+          largura * tamanhoMaximo / altura;
+
+        altura = tamanhoMaximo;
+      }
+
+      canvas.width = largura;
+      canvas.height = altura;
+
+      const ctx =
+        canvas.getContext("2d");
+
+      ctx.drawImage(
+        imagem,
+        0,
+        0,
+        largura,
+        altura
+      );
+
+      const foto =
+        canvas.toDataURL(
+          "image/jpeg",
+          0.85
+        );
+
+      fotosBIC[numero] = foto;
+
+      const preview =
+        document.getElementById(
+          `fotoBICPreview${numero}`
+        );
+
+      const acoes =
+        document.getElementById(
+          `acoesFotoBIC${numero}`
+        );
+
+      const botao =
+        document.getElementById(
+          `btnFotoBIC${numero}`
+        );
+
+      preview.src = foto;
+      preview.style.display = "block";
+
+      acoes.style.display = "flex";
+
+      botao.style.display = "none";
+    };
+
+    imagem.src = event.target.result;
+  };
+
+  reader.readAsDataURL(arquivo);
+}
+
+
+function refazerFotoBIC(numero){
+
+  const input =
+    document.getElementById(
+      `fotoBICInput${numero}`
+    );
+
+  input.value = "";
+  input.click();
+}
+
+
+function excluirFotoBIC(numero){
+
+  delete fotosBIC[numero];
+
+  const input =
+    document.getElementById(
+      `fotoBICInput${numero}`
+    );
+
+  const preview =
+    document.getElementById(
+      `fotoBICPreview${numero}`
+    );
+
+  const acoes =
+    document.getElementById(
+      `acoesFotoBIC${numero}`
+    );
+
+  const botao =
+    document.getElementById(
+      `btnFotoBIC${numero}`
+    );
+
+  input.value = "";
+
+  preview.src = "";
+  preview.style.display = "none";
+
+  acoes.style.display = "none";
+
+  botao.style.display = "block";
+}
+  
 function gerarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -353,7 +547,9 @@ function gerarPDF() {
   let texto = "MORTE VIOLENTA INTENCIONAL\n\n";
   texto += `Perito responsável: ${nomePerito} (mat. ${matPerito})\n\n`;
 
-  document.querySelectorAll("input, select, textarea").forEach(el => {
+  document.querySelectorAll(
+  'input:not([type="file"]), select, textarea'
+).forEach(el => {
     if (el.value) {
       const label = el.previousElementSibling ? el.previousElementSibling.innerText : el.id;
       texto += label + ": " + el.value + "\n\n";
@@ -372,7 +568,78 @@ function gerarPDF() {
     doc.text(linha, 10, y);
     y += 7;
   });
+/* =========================
+FOTOS BIC NO PDF
+========================= */
 
+const qtdVitimas =
+  Number(
+    document.getElementById("qtdEnvolvidos").value
+  ) || 0;
+
+for(
+  let i = 1;
+  i <= qtdVitimas;
+  i++
+){
+
+  if(!fotosBIC[i]){
+    continue;
+  }
+
+  doc.addPage();
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+
+  doc.text(
+    `FOTO BIC ${i}`,
+    105,
+    15,
+    { align:"center" }
+  );
+
+  const propriedades =
+    doc.getImageProperties(
+      fotosBIC[i]
+    );
+
+  const larguraMaxima = 180;
+  const alturaMaxima = 245;
+
+  let larguraFoto = larguraMaxima;
+
+  let alturaFoto =
+    propriedades.height *
+    larguraFoto /
+    propriedades.width;
+
+  if(
+    alturaFoto >
+    alturaMaxima
+  ){
+
+    alturaFoto =
+      alturaMaxima;
+
+    larguraFoto =
+      propriedades.width *
+      alturaFoto /
+      propriedades.height;
+  }
+
+  const x =
+    (210 - larguraFoto) / 2;
+
+  doc.addImage(
+    fotosBIC[i],
+    "JPEG",
+    x,
+    25,
+    larguraFoto,
+    alturaFoto
+  );
+}
   const data = document.getElementById("dataPericia").value || document.getElementById("dataAcionamento").value || "sem_data";
   doc.save(`morte_violenta_intencional_${data}.pdf`);
 }
@@ -391,6 +658,10 @@ function gerarEnvolvidos() {
   const area = document.getElementById("areaEnvolvidos");
 
   area.innerHTML = "";
+
+  for(const chave in fotosBIC){
+  delete fotosBIC[chave];
+}
 
   for (let i = 1; i <= qtd; i++) {
     area.innerHTML += `
@@ -431,6 +702,55 @@ function gerarEnvolvidos() {
         <input type="text" id="Lesoes${i}" placeholder="Descrever lesões visíveis, localização anatômica e características gerais">
         <label>Pertences da vítima ${i}</label>
         <input type="text" id="pertence${i}">
+        <div class="foto-bic-container">
+
+  <input
+    type="file"
+    id="fotoBICInput${i}"
+    accept="image/*"
+    capture="environment"
+    hidden
+    onchange="processarFotoBIC(${i}, this)"
+  >
+
+  <button
+    type="button"
+    id="btnFotoBIC${i}"
+    class="btn-foto-bic"
+    onclick="abrirCameraBIC(${i})"
+  >
+    📷 FOTO BIC ${i}
+  </button>
+
+  <img
+    id="fotoBICPreview${i}"
+    class="foto-bic-preview"
+  >
+
+  <div
+    id="acoesFotoBIC${i}"
+    class="acoes-foto-bic"
+  >
+
+    <button
+      type="button"
+      class="btn-refazer-foto"
+      onclick="refazerFotoBIC(${i})"
+    >
+      🔄 REFAZER
+    </button>
+
+    <button
+      type="button"
+      class="btn-excluir-foto"
+      onclick="excluirFotoBIC(${i})"
+    >
+      🗑️ EXCLUIR
+    </button>
+
+  </div>
+
+</div>
 
       </div>
     `;
