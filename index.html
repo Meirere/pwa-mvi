@@ -345,6 +345,121 @@ Limpar dados
 </footer>
 
 <script>
+
+/* =========================
+ESTATÍSTICAS DE UTILIZAÇÃO
+========================= */
+
+const NOME_PWA = "MVI";
+
+const SUPABASE_URL =
+  "https://zkbgjschdjnmbczlxqcw.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_V3FoZmY217uhwXXEuMQ0-g_ghTi8Kh2";
+
+/* =========================
+IDENTIFICADOR MENSAL
+========================= */
+
+function obterChaveMesAtual() {
+
+  const agora = new Date();
+
+  const ano = agora.getFullYear();
+
+  const mes =
+    String(agora.getMonth() + 1)
+      .padStart(2, "0");
+
+  return `${ano}-${mes}`;
+}
+
+
+function obterIdMensal() {
+
+  const mesAtual =
+    obterChaveMesAtual();
+
+  const chaveMes =
+    `${NOME_PWA}_mes_id`;
+
+  const chaveReferencia =
+    `${NOME_PWA}_mes_ref`;
+
+  const mesSalvo =
+    localStorage.getItem(chaveReferencia);
+
+  let id =
+    localStorage.getItem(chaveMes);
+
+  if (
+    !id ||
+    mesSalvo !== mesAtual
+  ) {
+
+    id = crypto.randomUUID();
+
+    localStorage.setItem(
+      chaveMes,
+      id
+    );
+
+    localStorage.setItem(
+      chaveReferencia,
+      mesAtual
+    );
+  }
+
+  return id;
+}
+
+/* =========================
+REGISTRO DE ABERTURA
+========================= */
+
+async function registrarAbertura() {
+
+  try {
+
+    const idMensal =
+      obterIdMensal();
+
+    const resposta =
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/pwa_acessos`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Prefer": "return=minimal"
+          },
+
+          body: JSON.stringify({
+            app: NOME_PWA,
+            id_mensal: idMensal
+          })
+        }
+      );
+
+    if (!resposta.ok) {
+      throw new Error(
+        `Erro ao registrar abertura: ${resposta.status}`
+      );
+    }
+
+  } catch (erro) {
+
+    console.warn(
+      "Não foi possível registrar a abertura da PWA.",
+      erro
+    );
+  }
+}
+  
 const campos = document.querySelectorAll(
   'input:not([type="file"]), select, textarea'
 );
@@ -645,11 +760,45 @@ for(
 }
 
 function limparDados() {
-  const confirmar = confirm("Tem certeza que deseja apagar todos os dados preenchidos?");
+
+  const confirmar = confirm(
+    "Tem certeza que deseja apagar todos os dados preenchidos?"
+  );
 
   if (confirmar) {
+
+    const chaveId =
+      `${NOME_PWA}_mes_id`;
+
+    const chaveReferencia =
+      `${NOME_PWA}_mes_ref`;
+
+    const idMensal =
+      localStorage.getItem(chaveId);
+
+    const mesReferencia =
+      localStorage.getItem(chaveReferencia);
+
     localStorage.clear();
-    alert("Dados apagados com sucesso.");
+
+    if (idMensal) {
+      localStorage.setItem(
+        chaveId,
+        idMensal
+      );
+    }
+
+    if (mesReferencia) {
+      localStorage.setItem(
+        chaveReferencia,
+        mesReferencia
+      );
+    }
+
+    alert(
+      "Dados apagados com sucesso."
+    );
+
     location.reload();
   }
 }
@@ -797,9 +946,13 @@ function capturarGPS() {
   );
 }
 window.addEventListener("load", () => {
+
+  registrarAbertura();
+
   if (localStorage.getItem("qtdEnvolvidos")) {
     gerarEnvolvidos();
   }
+
 });
 
 if ('serviceWorker' in navigator) {
