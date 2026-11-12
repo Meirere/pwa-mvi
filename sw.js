@@ -1,9 +1,9 @@
 /* ==========================================
    SERVICE WORKER - MVI
-   VERSÃO 14
+   VERSÃO 15
    ========================================== */
 
-const CACHE_NAME = 'mvi-cache-v14';
+const CACHE_NAME = 'mvi-cache-v15';
 
 const urlsToCache = [
   './',
