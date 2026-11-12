@@ -136,9 +136,14 @@
 </head>
 
 <body>
+<form id="form">
 <h2>Morte Violenta Intencional</h2>
   
-<h3>Isolamento do Local</h3>
+<h3>Isolamento do Local e horário de chegada</h3>
+
+<label>Hora da chegada ao local</label>
+<input type="time" id="horaChegada">
+
 <label>O local estava isolado?</label>
 <select id="localIsolado">
   <option value="">Selecione</option>
@@ -163,7 +168,10 @@
   <option>Parcialmente</option>
  </select>
   
-<form id="form">
+<label>Informações colhidas no local</label>
+<textarea id="informacoes" placeholder="Campo livre para digitar informações colhidas no local"></textarea>
+
+
 <h3>Dados Adicionais da Perícia</h3>
 
 <label>Protocolo CAD/CIODS</label>
@@ -182,6 +190,9 @@
 <option value="Cachoeirinha - 109 CP">109 CP - Cachoeirinha</option>
 <option value="Camocim de São Félix - 100 CP">100 CP - Camocim de São Félix</option>
 <option value="Caruaru - 3 DHA">3 DHA - Caruaru</option>
+<option value="Caruaru - 88 CP">88 CP - Caruaru</option>
+<option value="Caruaru - 89 CP">89 CP - Caruaru</option>
+<option value="Caruaru - 90 CP">90 CP - Caruaru</option>
 <option value="Cupira - 94 CP">94 CP - Cupira</option>
 <option value="Jataúba - 111 CP">111 CP - Jataúba</option>
 <option value="Lagoa dos Gatos - 99 CP">99 CP - Lagoa dos Gatos</option>
@@ -267,25 +278,6 @@
 <label>Distância da câmera ao cadáver</label>
 <input type="text" id="distanciaCamera" placeholder="Em metros">
 
-<h3>Perito e Horários</h3>
-
-<label>Nome do Perito</label>
-<input type="text" id="perito">
-<label>Matrícula do Perito</label>
-<input type="text" id="matriculaPerito">
-
-<label>Hora da chegada ao local</label>
-<input type="time" id="horaChegada">
-
-<label>Hora do fim da perícia</label>
-<input type="time" id="horaFim">
-
-<label>Finalizada no mesmo dia?</label>
-<select id="mesmoDia">
-  <option value="">Selecione</option>
-  <option>Sim</option>
-  <option>Não</option>
-</select>
 
 <h3>Delegado Responsável</h3>
 
@@ -330,6 +322,23 @@
 <label>Observações</label>
 <textarea id="observacoes" placeholder="Campo livre para digitar observações específicas deste caso"></textarea>
   
+<h3>Perito e Horário do fim da perícia</h3>
+
+<label>Nome do Perito</label>
+<input type="text" id="perito">
+<label>Matrícula do Perito</label>
+<input type="text" id="matriculaPerito">
+
+<label>Hora do fim da perícia</label>
+<input type="time" id="horaFim">
+
+<label>Finalizada no mesmo dia?</label>
+<select id="mesmoDia">
+  <option value="">Selecione</option>
+  <option>Sim</option>
+  <option>Não</option>
+</select>
+
 <button type="button" class="btn-pdf" onclick="gerarPDF()">
 Gerar PDF
 </button>
@@ -501,6 +510,85 @@ FOTOS BIC DAS VÍTIMAS
 ========================= */
 
 const fotosBIC = {};
+const bancoFotos = new Promise((resolve, reject) => {
+  const pedido = indexedDB.open("MVI_Fotos_BIC", 1);
+
+  pedido.onupgradeneeded = () => {
+    const db = pedido.result;
+    if (!db.objectStoreNames.contains("fotos")) {
+      db.createObjectStore("fotos");
+    }
+  };
+
+  pedido.onsuccess = () => resolve(pedido.result);
+  pedido.onerror = () => reject(pedido.error);
+});
+
+async function salvarFotoBIC(numero, foto) {
+  const db = await bancoFotos;
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("fotos", "readwrite");
+    tx.objectStore("fotos").put(foto, numero);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function carregarFotosBIC() {
+  const db = await bancoFotos;
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("fotos", "readonly");
+    const pedido = tx.objectStore("fotos").getAllKeys();
+
+    pedido.onsuccess = async () => {
+      try {
+        const chaves = pedido.result;
+        const fotos = await Promise.all(
+          chaves.map(numero => new Promise((res, rej) => {
+            const leitura = db.transaction("fotos", "readonly")
+              .objectStore("fotos").get(numero);
+            leitura.onsuccess = () => res([numero, leitura.result]);
+            leitura.onerror = () => rej(leitura.error);
+          }))
+        );
+
+        fotos.forEach(([numero, foto]) => {
+          fotosBIC[numero] = foto;
+        });
+
+        resolve();
+      } catch (erro) {
+        reject(erro);
+      }
+    };
+
+    pedido.onerror = () => reject(pedido.error);
+  });
+}
+
+async function apagarFotoBICSalva(numero) {
+  const db = await bancoFotos;
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("fotos", "readwrite");
+    tx.objectStore("fotos").delete(numero);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function apagarTodasFotosBIC() {
+  const db = await bancoFotos;
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("fotos", "readwrite");
+    tx.objectStore("fotos").clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
 
 function abrirCameraBIC(numero){
 
@@ -575,6 +663,10 @@ function processarFotoBIC(numero, input){
         );
 
       fotosBIC[numero] = foto;
+      salvarFotoBIC(numero, foto).catch(erro => {
+        console.error("Erro ao salvar foto BIC:", erro);
+        alert("A fotografia foi carregada, mas não pôde ser salva para recuperação posterior.");
+      });
 
       const preview =
         document.getElementById(
@@ -621,6 +713,10 @@ function refazerFotoBIC(numero){
 function excluirFotoBIC(numero){
 
   delete fotosBIC[numero];
+  apagarFotoBICSalva(numero).catch(erro => {
+  console.error("Erro ao excluir fotografia armazenada:", erro);
+  alert("Não foi possível excluir a fotografia do armazenamento.");
+});
 
   const input =
     document.getElementById(
@@ -656,20 +752,30 @@ function gerarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  const nomePerito = document.getElementById("perito").value || "Meirere Lucio Pereira";
-  const matPerito = document.getElementById("matriculaPerito").value || "387.064-2";
+  const nomePerito = document.getElementById("perito").value || "Não informado";
+  const matPerito = document.getElementById("matriculaPerito").value || "Não informado";
 
   let texto = "MORTE VIOLENTA INTENCIONAL\n\n";
   texto += `Perito responsável: ${nomePerito} (mat. ${matPerito})\n\n`;
 
-  document.querySelectorAll(
+ document.querySelectorAll(
   'input:not([type="file"]), select, textarea'
 ).forEach(el => {
-    if (el.value) {
-      const label = el.previousElementSibling ? el.previousElementSibling.innerText : el.id;
-      texto += label + ": " + el.value + "\n\n";
-    }
-  });
+
+  // Evita duplicar nome e matrícula do perito no PDF
+  if (el.id === "perito" || el.id === "matriculaPerito") {
+    return;
+  }
+
+  if (el.value) {
+    const label = el.previousElementSibling
+      ? el.previousElementSibling.innerText
+      : el.id;
+
+    texto += label + ": " + el.value + "\n\n";
+  }
+
+});
 
   const linhas = doc.splitTextToSize(texto, 180);
   let y = 10;
@@ -779,6 +885,13 @@ function limparDados() {
     const mesReferencia =
       localStorage.getItem(chaveReferencia);
 
+    try {
+      await apagarTodasFotosBIC();
+    } catch (erro) {
+      console.error("Erro ao limpar fotografias:", erro);
+      alert("Não foi possível apagar as fotografias. A limpeza foi interrompida.");
+      return;
+    }
     localStorage.clear();
 
     if (idMensal) {
@@ -806,11 +919,11 @@ function gerarEnvolvidos() {
   const qtd = Number(document.getElementById("qtdEnvolvidos").value);
   const area = document.getElementById("areaEnvolvidos");
 
-  area.innerHTML = "";
+// Guarda as fotografias já carregadas
+const fotosAnteriores = { ...fotosBIC };
 
-  for(const chave in fotosBIC){
-  delete fotosBIC[chave];
-}
+// Limpa os campos para reconstruir o formulário
+area.innerHTML = "";
 
   for (let i = 1; i <= qtd; i++) {
     area.innerHTML += `
@@ -851,6 +964,13 @@ function gerarEnvolvidos() {
         <input type="text" id="Lesoes${i}" placeholder="Descrever lesões visíveis, localização anatômica e características gerais">
         <label>Pertences da vítima ${i}</label>
         <input type="text" id="pertence${i}">
+        
+        <label>Observações perinecroscópicas da vítima ${i}</label>
+        <textarea
+          id="observacoes_do_cadaver${i}"
+          placeholder="Rigidez cadavérica, manchas hipostáticas, fenômenos putrefativos e outras observações">
+        </textarea>
+
         <div class="foto-bic-container">
 
   <input
@@ -905,6 +1025,23 @@ function gerarEnvolvidos() {
     `;
   }
   ativarSalvamento("#areaEnvolvidos");
+
+  // Restaura as fotografias das vítimas que continuam no formulário
+  for (let i = 1; i <= qtd; i++) {
+
+    if (fotosAnteriores[i]) {
+
+      const preview = document.getElementById(`fotoBICPreview${i}`);
+      const acoes = document.getElementById(`acoesFotoBIC${i}`);
+      const botao = document.getElementById(`btnFotoBIC${i}`);
+
+      preview.src = fotosAnteriores[i];
+      preview.style.display = "block";
+
+      acoes.style.display = "flex";
+      botao.style.display = "none";
+    }
+  }
 }
 
 function capturarGPS() {
@@ -945,9 +1082,16 @@ function capturarGPS() {
     } 
   );
 }
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
 
   registrarAbertura();
+
+  try {
+    await carregarFotosBIC();
+  } catch (erro) {
+    console.error("Erro ao recuperar fotografias:", erro);
+    alert("Não foi possível recuperar as fotografias BIC salvas.");
+  }
 
   if (localStorage.getItem("qtdEnvolvidos")) {
     gerarEnvolvidos();
