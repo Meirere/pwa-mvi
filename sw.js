@@ -3,7 +3,7 @@
    VERSÃO 12
    ========================================== */
 
-const CACHE_NAME = 'mvi-cache-v13';
+const CACHE_NAME = 'mvi-cache-v14';
 
 const urlsToCache = [
   './',
