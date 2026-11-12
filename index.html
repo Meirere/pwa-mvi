@@ -749,6 +749,14 @@ function excluirFotoBIC(numero){
 }
   
 function gerarPDF() {
+
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert("ERRO: A biblioteca jsPDF não foi carregada.");
+    return;
+  }
+
+  alert("Biblioteca jsPDF carregada corretamente!");
+
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
